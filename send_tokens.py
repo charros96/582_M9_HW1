@@ -15,6 +15,7 @@ headers = {
 acl = algod.AlgodClient(algod_token, algod_address, headers)
 min_balance = 100000 #https://developer.algorand.org/docs/features/accounts/#minimum-balance
 
+"""
 from algosdk import account, encoding
 
 # generate an account
@@ -30,10 +31,10 @@ else:
 
 mnemonic_secret = mnemonic.from_private_key(private_key)
 print(mnemonic_secret)
-
-#mnemonic_secret = "YOUR MNEMONIC HERE"
-#sk = mnemonic.to_private_key(mnemonic_secret)
-#pk = mnemonic.to_public_key(mnemonic_secret)
+"""
+mnemonic_secret = "dismiss silk all kitchen observe say sphere easy worry island boil faint guilt hobby cover torch they market beauty century satoshi party below abstract omit"
+sk = mnemonic.to_private_key(mnemonic_secret)
+pk = mnemonic.to_public_key(mnemonic_secret)
 
 def send_tokens( receiver_pk, tx_amount ):
     params = acl.suggested_params()
@@ -43,8 +44,17 @@ def send_tokens( receiver_pk, tx_amount ):
     last_valid_round = params.last
 
     #Your code here
+    tx = transaction.PaymentTxn(pk, tx_fee, first_valid_round, last_valid_round, gen_hash, receiver_pk, tx_amount, flat_fee=True)
+    signed_tx = tx.sign(sk)
+    txid=signed_tx.transaction.get_txid()
+    try:
+        tx_confirm = acl.send_transaction(signed_tx)
+        print('Transaction sent with ID', signed_tx.transaction.get_txid())
+        wait_for_confirmation(acl, txid=signed_tx.transaction.get_txid())
+    except Exception as e:
+        print(e)
 
-    return sender_pk, txid
+    return pk, txid
 
 # Function from Algorand Inc.
 def wait_for_confirmation(client, txid):
