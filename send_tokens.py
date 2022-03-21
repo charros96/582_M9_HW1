@@ -28,6 +28,13 @@ if encoding.is_valid_address(address):
 else:
     print("The address is invalid.")
 
+mnemonic_secret = mnemonic.from_private_key(private_key)
+print(mnemonic_secret)
+
+#mnemonic_secret = "YOUR MNEMONIC HERE"
+#sk = mnemonic.to_private_key(mnemonic_secret)
+#pk = mnemonic.to_public_key(mnemonic_secret)
+
 def send_tokens( receiver_pk, tx_amount ):
     params = acl.suggested_params()
     gen_hash = params.gh
